@@ -22,13 +22,13 @@ public class ProductController{
 
     @GetMapping
     public List<Product> getAllProducts(){
-        return productRepository.findAll();
+        return service.getAllProducts();
     }
 
 
     @PostMapping
     public Product addProduct(@RequestBody Product product){
-        return productRepository.save(product);
+        return service.addProduct(product);
     }
 
 

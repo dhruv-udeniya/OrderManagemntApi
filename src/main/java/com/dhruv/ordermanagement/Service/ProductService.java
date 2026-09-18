@@ -16,6 +16,16 @@ public class ProductService {
     ProductRepository repo;
 
 
+    public List<Product> getAllProducts(){
+        return repo.findAll();
+    }
+
+
+    public Product addProduct(Product product){
+        return repo.save(product);
+    }
+
+
     public Product getProductById(long id){
         if (!repo.existsById(id)){
             System.out.println("Product not Found.");
@@ -34,12 +44,6 @@ public class ProductService {
 
 
     public List<Product> getProductByCategory(String category){
-//        List<Product> product = repo.findByCategory(category);
-//        if (product == null){
-//            System.out.println("Product not found.");
-//            return null;
-//        }
-//        return product;
         return repo.findByCategory(category);
     }
 
