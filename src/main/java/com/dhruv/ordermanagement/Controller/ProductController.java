@@ -2,6 +2,7 @@ package com.dhruv.ordermanagement.Controller;
 
 import com.dhruv.ordermanagement.Entity.Product;
 import com.dhruv.ordermanagement.Repository.ProductRepository;
+import com.dhruv.ordermanagement.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +17,13 @@ public class ProductController{
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductService service;
+
     @GetMapping
     public List<Product> getAllProducts(){
         return productRepository.findAll();
     }
-
-
-    @GetMapping("/")
-    public String getProducts(){
-        return "All Products";
-    }
-
 
 
     @PostMapping
@@ -36,13 +33,30 @@ public class ProductController{
 
 
     @GetMapping("/{id}")
-    public String getProductById(@PathVariable int id){
-        return "This is our Product it id is-:"+id;
+    public Product getProductById(@PathVariable long id){
+        return service.getProductById(id);
     }
 
 
     @GetMapping("/search")
-    public String getProduct(@RequestParam String name){
-        return "Searching product-:"+name;
+    public Product getProduct(@RequestParam String name){
+        return service.getProductByName(name);
+    }
+
+    @GetMapping("/category")
+    public List<Product> getProductByCategory(@RequestParam String category){
+        return service.getProductByCategory(category);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public String deleteProductById(@PathVariable long id){
+        service.deleteProducts(id);
+        return "Product Delete Successfully";
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProducts(@PathVariable long id,@RequestBody Product product){
+        return service.updateProduct(id,product);
     }
 }
