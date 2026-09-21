@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -16,6 +17,25 @@ public class CustomerService {
 
     public List<Customer> getAllCustomers(){
         return customerRepository.findAll();
+    }
+
+
+    public Customer customerGetById(long id){
+        if (!customerRepository.existsById(id)){
+            System.out.println("Customer not Found.");
+            return null;
+        }
+        return customerRepository.findById(id).get();
+    }
+
+
+    public Customer customerGetByName(String name){
+        Customer customer = customerRepository.findByName(name);
+        if (customer==null){
+            System.out.println("Customer Not Found.");
+            return null;
+        }
+        return customer;
     }
 
 

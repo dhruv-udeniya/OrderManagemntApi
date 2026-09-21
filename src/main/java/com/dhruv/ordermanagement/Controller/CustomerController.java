@@ -22,6 +22,18 @@ public class CustomerController {
         return service.getAllCustomers();
     }
 
+    @GetMapping("/{id}")
+    public Customer getCustomerById(@PathVariable long id){
+        return service.customerGetById(id);
+    }
+
+
+    @GetMapping("/search")
+    public Customer getCustomerByName(@RequestParam String name){
+        return service.customerGetByName(name);
+    }
+
+
     @PostMapping
     public Customer addCustomers(@RequestBody Customer customer){
         return service.addCustomers(customer);
