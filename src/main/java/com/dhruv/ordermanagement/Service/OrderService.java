@@ -1,6 +1,6 @@
 package com.dhruv.ordermanagement.Service;
 
-
+import java.util.Date;
 import com.dhruv.ordermanagement.Entity.Customer;
 import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
@@ -79,6 +79,9 @@ public class OrderService {
 
         // Put the final total into the Order
         order.setTotalAmount(totalAmount);
+
+        // Set the current date and time when the order is created
+        order.setOrderDate(new Date());
 
         // Save the Order
         Order savedOrder = orderRepository.save(order);
