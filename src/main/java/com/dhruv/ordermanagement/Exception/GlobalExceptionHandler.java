@@ -28,4 +28,11 @@ public class GlobalExceptionHandler {
     public String handleInsufficientStock(InsufficientStockException ex) {
         return ex.getMessage();
     }
+
+
+    @ExceptionHandler(InvalidOrderQuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
+        return ex.getMessage();
+    }
 }

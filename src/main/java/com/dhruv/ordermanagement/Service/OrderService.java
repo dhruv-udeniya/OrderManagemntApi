@@ -7,6 +7,7 @@ import com.dhruv.ordermanagement.Entity.OrderItem;
 import com.dhruv.ordermanagement.Entity.Product;
 import com.dhruv.ordermanagement.Exception.CustomerNotFoundException;
 import com.dhruv.ordermanagement.Exception.InsufficientStockException;
+import com.dhruv.ordermanagement.Exception.InvalidOrderQuantityException;
 import com.dhruv.ordermanagement.Exception.ProductNotFoundException;
 import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
@@ -107,6 +108,12 @@ public class OrderService {
 
         // Now connect and save every OrderItem
         for (OrderItem item : items) {
+
+            // Check whether the requested quantity is valid
+            if (item.getQuantity() <= 0) {
+
+                throw new InvalidOrderQuantityException(item.getQuantity());
+            }
 
             // Connect this OrderItem to the saved Order
             item.setOrder(savedOrder);
