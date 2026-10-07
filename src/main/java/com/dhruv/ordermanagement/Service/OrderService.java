@@ -5,6 +5,7 @@ import com.dhruv.ordermanagement.Entity.Customer;
 import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
 import com.dhruv.ordermanagement.Entity.Product;
+import com.dhruv.ordermanagement.Exception.CustomerNotFoundException;
 import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
 import com.dhruv.ordermanagement.Repository.OrderRepository;
@@ -41,8 +42,8 @@ public class OrderService {
 
         // Use the Customer ID to find the actual Customer from the MySQL database
         // findById() returns Optional<Customer>, so .get() extracts the Customer
-        Customer customerFromDB = customerRepository.findById(customerId).get();
-
+        Customer customerFromDB = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
         // Attach the actual Customer from the database to this Order
         order.setCustomer(customerFromDB);
 
