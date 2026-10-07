@@ -22,4 +22,10 @@ public class GlobalExceptionHandler {
         return productNotFoundException.getMessage();
     }
 
+
+    @ExceptionHandler(InsufficientStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInsufficientStock(InsufficientStockException ex) {
+        return ex.getMessage();
+    }
 }

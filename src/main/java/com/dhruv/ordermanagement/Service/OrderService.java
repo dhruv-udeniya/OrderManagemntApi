@@ -6,6 +6,7 @@ import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
 import com.dhruv.ordermanagement.Entity.Product;
 import com.dhruv.ordermanagement.Exception.CustomerNotFoundException;
+import com.dhruv.ordermanagement.Exception.InsufficientStockException;
 import com.dhruv.ordermanagement.Exception.ProductNotFoundException;
 import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
@@ -66,6 +67,16 @@ public class OrderService {
             // Find the actual Product from the database or else throw exception
             Product productFromDB = productRepository.findById(productId)
                     .orElseThrow(() -> new ProductNotFoundException(productId));
+
+            // Check whether enough stock is available
+            if (productFromDB.getStock() < item.getQuantity()) {
+
+                throw new InsufficientStockException(
+                        productId,
+                        productFromDB.getStock(),
+                        item.getQuantity()
+                );
+            }
 
             // Attach the actual Product from the database to this OrderItem
             item.setProduct(productFromDB);
