@@ -109,6 +109,18 @@ public class OrderService {
             // Connect this OrderItem to the saved Order
             item.setOrder(savedOrder);
 
+            // Get the Product attached to this OrderItem
+            Product product = item.getProduct();
+
+            // Calculate remaining stock
+            int newStock = product.getStock() - item.getQuantity();
+
+            // Update Product stock
+            product.setStock(newStock);
+
+            // Save updated Product
+            productRepository.save(product);
+
             // Save this OrderItem
             orderItemRepository.save(item);
         }
