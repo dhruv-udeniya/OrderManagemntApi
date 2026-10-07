@@ -5,10 +5,7 @@ import com.dhruv.ordermanagement.Entity.Customer;
 import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
 import com.dhruv.ordermanagement.Entity.Product;
-import com.dhruv.ordermanagement.Exception.CustomerNotFoundException;
-import com.dhruv.ordermanagement.Exception.InsufficientStockException;
-import com.dhruv.ordermanagement.Exception.InvalidOrderQuantityException;
-import com.dhruv.ordermanagement.Exception.ProductNotFoundException;
+import com.dhruv.ordermanagement.Exception.*;
 import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
 import com.dhruv.ordermanagement.Repository.OrderRepository;
@@ -54,6 +51,12 @@ public class OrderService {
 
         // Get all OrderItems that came inside the Order request
         List<OrderItem> items = order.getItems();
+
+        // Check whether the Order contains at least one item
+        if (items == null || items.isEmpty()) {
+
+            throw new InvalidOrderException("Order must contain at least one item.");
+        }
 
         // Store the total of all items
         double totalAmount = 0;

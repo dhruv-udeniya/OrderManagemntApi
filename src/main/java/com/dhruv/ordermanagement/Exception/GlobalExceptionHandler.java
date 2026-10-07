@@ -35,4 +35,11 @@ public class GlobalExceptionHandler {
     public String handleInvalidOrderQuantity(InvalidOrderQuantityException ex) {
         return ex.getMessage();
     }
+
+
+    @ExceptionHandler(InvalidOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidOrder(InvalidOrderException ex){
+        return ex.getMessage();
+    }
 }
