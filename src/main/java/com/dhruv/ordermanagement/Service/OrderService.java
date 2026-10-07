@@ -47,6 +47,10 @@ public class OrderService {
         // Get the Customer ID from that Customer object
         Long customerId = customer.getId();
 
+        if (customerId == null) {
+            throw new InvalidOrderException("Customer ID is required.");
+        }
+
         // Use the Customer ID to find the actual Customer from the MySQL database
         // findById() returns Optional<Customer>, so .get() extracts the Customer
         Customer customerFromDB = customerRepository.findById(customerId)
@@ -69,6 +73,10 @@ public class OrderService {
         // Process every OrderItem inside this Order
         for (OrderItem item : items) {
 
+            if (item.getQuantity() <= 0) {
+                throw new InvalidOrderQuantityException(item.getQuantity());
+            }
+
             // Get the Product object from this OrderItem
             Product product = item.getProduct();
 
@@ -80,6 +88,11 @@ public class OrderService {
 
             // Get the Product ID
             Long productId = product.getId();
+
+            // Check whether Product ID was provided
+            if (productId == null) {
+                throw new InvalidOrderException("Product ID is required.");
+            }
 
             // Find the actual Product from the database or else throw exception
             Product productFromDB = productRepository.findById(productId)
@@ -122,12 +135,6 @@ public class OrderService {
 
         // Now connect and save every OrderItem
         for (OrderItem item : items) {
-
-            // Check whether the requested quantity is valid
-            if (item.getQuantity() <= 0) {
-
-                throw new InvalidOrderQuantityException(item.getQuantity());
-            }
 
             // Connect this OrderItem to the saved Order
             item.setOrder(savedOrder);
