@@ -39,6 +39,11 @@ public class OrderService {
         // Get the Customer object that came inside the Order request from Postman
         Customer customer = order.getCustomer();
 
+        // Check whether a customer was provided
+        if (customer == null) {
+            throw new InvalidOrderException("Customer is required.");
+        }
+
         // Get the Customer ID from that Customer object
         Long customerId = customer.getId();
 
@@ -66,6 +71,12 @@ public class OrderService {
 
             // Get the Product object from this OrderItem
             Product product = item.getProduct();
+
+            // Check whether a product was provided
+            if (product == null) {
+                throw new InvalidOrderException("Product is required.");
+            }
+
 
             // Get the Product ID
             Long productId = product.getId();
