@@ -83,6 +83,9 @@ public class OrderService {
         // Set the current date and time when the order is created
         order.setOrderDate(new Date());
 
+        // Set the initial status of a newly created order
+        order.setStatus("PENDING");
+
         // Save the Order
         Order savedOrder = orderRepository.save(order);
 
