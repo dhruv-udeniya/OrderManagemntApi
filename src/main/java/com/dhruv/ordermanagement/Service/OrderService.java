@@ -12,6 +12,7 @@ import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
 import com.dhruv.ordermanagement.Repository.OrderRepository;
 import com.dhruv.ordermanagement.Repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class OrderService {
 
 
 
+    @Transactional
     public Order createOrder(Order order){
 
         // Get the Customer object that came inside the Order request from Postman
@@ -123,7 +125,10 @@ public class OrderService {
 
             // Save this OrderItem
             orderItemRepository.save(item);
+
+
         }
+
 
         // Return the Order object back to the Controller
         return order;
