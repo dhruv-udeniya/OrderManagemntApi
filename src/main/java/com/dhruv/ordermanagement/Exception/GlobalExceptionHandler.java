@@ -42,4 +42,10 @@ public class GlobalExceptionHandler {
     public String handleInvalidOrder(InvalidOrderException ex){
         return ex.getMessage();
     }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleOrderNotFound(OrderNotFoundException ex){
+        return ex.getMessage();
+    }
 }

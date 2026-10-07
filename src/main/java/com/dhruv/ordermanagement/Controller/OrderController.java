@@ -2,6 +2,7 @@ package com.dhruv.ordermanagement.Controller;
 
 
 import com.dhruv.ordermanagement.Entity.Order;
+import org.springframework.web.bind.annotation.PathVariable;
 import com.dhruv.ordermanagement.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,11 @@ public class OrderController {
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
+    }
+
+    @GetMapping("/{id}")
+    public Order getOrderById(@PathVariable Long id){
+        return orderService.getOrderById(id);
     }
 
 }
