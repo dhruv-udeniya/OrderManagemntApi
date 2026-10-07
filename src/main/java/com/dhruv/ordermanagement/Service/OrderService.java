@@ -6,6 +6,7 @@ import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
 import com.dhruv.ordermanagement.Entity.Product;
 import com.dhruv.ordermanagement.Exception.CustomerNotFoundException;
+import com.dhruv.ordermanagement.Exception.ProductNotFoundException;
 import com.dhruv.ordermanagement.Repository.CustomerRepository;
 import com.dhruv.ordermanagement.Repository.OrderItemRepository;
 import com.dhruv.ordermanagement.Repository.OrderRepository;
@@ -62,8 +63,9 @@ public class OrderService {
             // Get the Product ID
             Long productId = product.getId();
 
-            // Find the actual Product from the database
-            Product productFromDB = productRepository.findById(productId).get();
+            // Find the actual Product from the database or else throw exception
+            Product productFromDB = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));
 
             // Attach the actual Product from the database to this OrderItem
             item.setProduct(productFromDB);
