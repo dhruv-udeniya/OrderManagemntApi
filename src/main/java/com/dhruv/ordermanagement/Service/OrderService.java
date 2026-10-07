@@ -33,6 +33,11 @@ public class OrderService {
 
 
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+
     @Transactional
     public Order createOrder(Order order){
 
@@ -72,6 +77,11 @@ public class OrderService {
 
         // Process every OrderItem inside this Order
         for (OrderItem item : items) {
+
+            // Check whether the OrderItem is null
+            if (item == null) {
+                throw new InvalidOrderException("Order item cannot be null.");
+            }
 
             if (item.getQuantity() <= 0) {
                 throw new InvalidOrderQuantityException(item.getQuantity());
