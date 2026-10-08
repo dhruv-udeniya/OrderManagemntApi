@@ -47,6 +47,9 @@ public class OrderService {
 
 
     public List<Order> getOrdersByCustomer(Long customerId) {
+
+        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
         return orderRepository.findByCustomer_Id(customerId);
     }
 
