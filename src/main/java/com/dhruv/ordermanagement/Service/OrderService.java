@@ -42,9 +42,14 @@ public class OrderService {
 
     public Order getOrderById(Long id) {
 
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException(id));
+        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
+
+
+    public List<Order> getOrdersByCustomer(Long customerId) {
+        return orderRepository.findByCustomer_Id(customerId);
+    }
+
 
 
     @Transactional
