@@ -3,6 +3,8 @@ package com.dhruv.ordermanagement.Controller;
 
 import com.dhruv.ordermanagement.DTO.UpdateOrderStatusRequest;
 import com.dhruv.ordermanagement.Entity.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.dhruv.ordermanagement.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,13 @@ public class OrderController {
     private OrderService orderService;
 
 
+
     @PostMapping
-    public Order createOrder(@RequestBody Order order){
-        return orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@RequestBody Order order){
+
+        Order savedOrder = orderService.createOrder(order);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
     }
 
     @GetMapping
