@@ -1,6 +1,7 @@
 package com.dhruv.ordermanagement.Controller;
 
 
+import com.dhruv.ordermanagement.DTO.UpdateOrderStatusRequest;
 import com.dhruv.ordermanagement.Entity.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.dhruv.ordermanagement.Service.OrderService;
@@ -36,6 +37,13 @@ public class OrderController {
     @GetMapping("/customer/{customerId}")
     public List<Order> getOrdersByCustomer(@PathVariable Long customerId) {
         return orderService.getOrdersByCustomer(customerId);
+    }
+
+
+    @PutMapping("/{id}/status")
+    public Order updateOrderStatus(@PathVariable Long id, @RequestBody UpdateOrderStatusRequest request) {
+
+        return orderService.updateOrderStatus(id, request.getStatus());
     }
 
 }

@@ -55,6 +55,53 @@ public class OrderService {
 
 
 
+    public Order updateOrderStatus(Long orderId, String newStatus) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        if (newStatus == null || newStatus.isBlank()) {
+            throw new InvalidOrderStatusException("Order status is required.");
+        }
+
+        String currentStatus = order.getStatus();
+
+        boolean validTransition = switch (currentStatus) {
+
+            case "PENDING" ->
+                    newStatus.equals("CONFIRMED") ||
+                            newStatus.equals("CANCELLED");
+
+            case "CONFIRMED" ->
+                    newStatus.equals("SHIPPED") ||
+                            newStatus.equals("CANCELLED");
+
+            case "SHIPPED" ->
+                    newStatus.equals("DELIVERED");
+
+            case "DELIVERED", "CANCELLED" ->
+                    false;
+
+            default ->
+                    false;
+        };
+
+        if (!validTransition) {
+            throw new InvalidOrderStatusException(
+                    "Cannot change order status from "
+                            + currentStatus
+                            + " to "
+                            + newStatus
+            );
+        }
+
+        order.setStatus(newStatus);
+
+        return orderRepository.save(order);
+    }
+
+
+
     @Transactional
     public Order createOrder(Order order){
 
