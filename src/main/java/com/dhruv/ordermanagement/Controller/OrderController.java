@@ -1,6 +1,7 @@
 package com.dhruv.ordermanagement.Controller;
 
 
+import com.dhruv.ordermanagement.DTO.OrderResponseDTO;
 import com.dhruv.ordermanagement.DTO.UpdateOrderStatusRequest;
 import com.dhruv.ordermanagement.Entity.Order;
 import org.springframework.http.HttpStatus;
@@ -23,31 +24,31 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order){
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody Order order){
 
-        Order savedOrder = orderService.createOrder(order);
+        OrderResponseDTO  savedOrder = orderService.createOrder(order);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
+    public List<OrderResponseDTO > getAllOrders() {
         return orderService.getAllOrders();
     }
 
     @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable Long id){
+    public OrderResponseDTO  getOrderById(@PathVariable Long id){
         return orderService.getOrderById(id);
     }
 
     @GetMapping("/customer/{customerId}")
-    public List<Order> getOrdersByCustomer(@PathVariable Long customerId) {
+    public List<OrderResponseDTO > getOrdersByCustomer(@PathVariable Long customerId) {
         return orderService.getOrdersByCustomer(customerId);
     }
 
 
     @PutMapping("/{id}/status")
-    public Order updateOrderStatus(@PathVariable Long id, @RequestBody UpdateOrderStatusRequest request) {
+    public OrderResponseDTO  updateOrderStatus(@PathVariable Long id, @RequestBody UpdateOrderStatusRequest request) {
 
         return orderService.updateOrderStatus(id, request.getStatus());
     }

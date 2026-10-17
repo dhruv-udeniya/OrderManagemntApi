@@ -1,6 +1,10 @@
 package com.dhruv.ordermanagement.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+
+import com.dhruv.ordermanagement.DTO.OrderItemResponseDTO;
+import com.dhruv.ordermanagement.DTO.OrderResponseDTO;
 import com.dhruv.ordermanagement.Entity.Customer;
 import com.dhruv.ordermanagement.Entity.Order;
 import com.dhruv.ordermanagement.Entity.OrderItem;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -35,27 +40,45 @@ public class OrderService {
 
 
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    // Get all orders
+    public List<OrderResponseDTO> getAllOrders() {
+
+        List<Order> orders = orderRepository.findAll();
+
+        List<OrderResponseDTO> orderDTOs = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponseDTO orderDTO = convertToDTO(order);
+            orderDTOs.add(orderDTO);
+        }
+
+        return orderDTOs;
     }
 
 
-    public Order getOrderById(Long id) {
 
-        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+    public List<OrderResponseDTO> getOrdersByCustomer(Long customerId) {
+
+        customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(customerId));
+
+        List<Order> orders =
+                orderRepository.findByCustomer_IdOrderByOrderDateDesc(customerId);
+
+        List<OrderResponseDTO> orderDTOs = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponseDTO orderDTO = convertToDTO(order);
+            orderDTOs.add(orderDTO);
+        }
+
+        return orderDTOs;
+
     }
 
 
-    public List<Order> getOrdersByCustomer(Long customerId) {
 
-        customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
-
-        return orderRepository.findByCustomer_Id(customerId);
-    }
-
-
-
-    public Order updateOrderStatus(Long orderId, String newStatus) {
+    public OrderResponseDTO updateOrderStatus(Long orderId, String newStatus) {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
@@ -97,13 +120,15 @@ public class OrderService {
 
         order.setStatus(newStatus);
 
-        return orderRepository.save(order);
+        Order updatedOrder = orderRepository.save(order);
+
+        return convertToDTO(updatedOrder);
     }
 
 
 
     @Transactional
-    public Order createOrder(Order order){
+    public OrderResponseDTO  createOrder(Order order) {
 
         // Get the Customer object that came inside the Order request from Postman
         Customer customer = order.getCustomer();
@@ -230,11 +255,50 @@ public class OrderService {
 
 
         }
-
-
-
-        // Return the Order object back to the Controller
-        return order;
+        return convertToDTO(savedOrder);
     }
 
+
+
+        private OrderResponseDTO convertToDTO(Order order) {
+
+            List<OrderItemResponseDTO> itemDTOs = new ArrayList<>();
+
+            if (order.getItems() != null) {
+
+                for (OrderItem item : order.getItems()) {
+
+                    OrderItemResponseDTO itemDTO =
+                            new OrderItemResponseDTO(
+                                    item.getProduct().getId(),
+                                    item.getProduct().getName(),
+                                    item.getQuantity(),
+                                    item.getPrice()
+                            );
+
+                    itemDTOs.add(itemDTO);
+                }
+            }
+            
+
+            return new OrderResponseDTO(
+                    order.getId(),
+                    order.getCustomer().getId(),
+                    order.getOrderDate(),
+                    order.getStatus(),
+                    order.getTotalAmount(),
+                    itemDTOs
+            );
+        }
+
+
+        public OrderResponseDTO getOrderById(Long id) {
+
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new OrderNotFoundException(id));
+
+            return convertToDTO(order);
+        }
+
 }
+
